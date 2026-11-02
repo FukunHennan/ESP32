@@ -1,6 +1,6 @@
 #include "RGB.h"
 
-static uint8_t RGB_Data[192][3] ={
+static const uint8_t RGB_Data[192][3] ={
     {64, 1, 0}, {63, 2, 0}, {62, 3, 0}, {61, 4, 0}, {60, 5, 0}, {59, 6, 0}, {58, 7, 0}, {57, 8, 0},
     {56, 9, 0}, {55, 10, 0}, {54, 11, 0}, {53, 12, 0}, {52, 13, 0}, {51, 14, 0}, {50, 15, 0}, {49, 16, 0},
     {48, 17, 0}, {47, 18, 0}, {46, 19, 0}, {45, 20, 0}, {44, 21, 0}, {43, 22, 0}, {42, 23, 0}, {41, 24, 0},
@@ -46,7 +46,7 @@ void RGB_Init(void)
     ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
 
     /* Set all LED off to clear all pixels */
-    led_strip_clear(led_strip);
+    ESP_ERROR_CHECK(led_strip_clear(led_strip));
 }
 void Set_RGB( uint8_t red_val, uint8_t green_val, uint8_t blue_val)
 {

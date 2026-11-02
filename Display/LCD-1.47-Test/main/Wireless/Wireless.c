@@ -56,7 +56,7 @@ void WIFI_Init(void *arg)
     esp_wifi_start();                            
 
     WIFI_NUM = WIFI_Scan();
-    printf("WIFI:%d\r\n",WIFI_NUM);
+    ESP_LOGI("WIFI", "Scan finished, APs found: %u", (unsigned)WIFI_NUM);
     
     vTaskDelete(NULL);
 }
@@ -227,7 +227,7 @@ uint16_t BLE_Scan(void)
     num_discovered_devices = 0;
     num_devices_with_name = 0;
 
-    printf("Starting BLE scan...\n");
+    ESP_LOGI(GATTC_TAG, "Starting BLE scan...");
     int rc = ble_gap_disc(BLE_OWN_ADDR_PUBLIC,
                           (SCAN_DURATION + 1) * 1000,
                           &disc_params,
@@ -241,7 +241,7 @@ uint16_t BLE_Scan(void)
     xSemaphoreTake(scan_done_sem, pdMS_TO_TICKS((SCAN_DURATION + 3) * 1000));
     ble_gap_disc_cancel();
 
-    printf("Stopping BLE scan...\n");
+    ESP_LOGI(GATTC_TAG, "Stopping BLE scan...");
     BLE_Scan_Finish = 1;
     if(WiFi_Scan_Finish == 1)
         Scan_finish = 1;

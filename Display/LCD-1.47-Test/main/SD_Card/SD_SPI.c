@@ -53,7 +53,7 @@ void SD_Init(void)
     // Options for mounting the filesystem.
     // If format_if_mount_failed is set to true, SD card will be partitioned and formatted in case when mounting fails.  false true
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = true,          
+        .format_if_mount_failed = false,          
         .max_files = 5,
         .allocation_unit_size = 16 * 1024
     };
@@ -77,14 +77,16 @@ void SD_Init(void)
         .sclk_io_num = PIN_NUM_SCLK,
         .quadwp_io_num = -1,
         .quadhd_io_num = -1,
-        .max_transfer_sz = 4000,
+        .max_transfer_sz = 8192,
     };
     ret = spi_bus_initialize(host.slot, &bus_cfg, SDSPI_DEFAULT_DMA);
-    if (ret != ESP_OK) {
-        ESP_LOGE(SD_TAG, "Failed to initialize SPI bus.");
+    if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) {
+        ESP_LOGE(SD_TAG, "Failed to initialize SPI bus (%s).", esp_err_to_name(ret));
         return;
     }
-
+    if (ret == ESP_ERR_INVALID_STATE) {
+        ESP_LOGI(SD_TAG, "SPI bus already initialized, sharing it with the display.");
+    }
     // This initializes the slot without card detect (CD) and write protect (WP) signals.
     // Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
     sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();

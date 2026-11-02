@@ -16,7 +16,7 @@ void app_main(void)
     Flash_Searching();
     RGB_Init();
     RGB_Example();
-    SD_Init();                              // SD must be initialized behind the LCD
+    SD_Init();                              // SD first: it configures the shared SPI2 bus with MISO
     LCD_Init();
     BK_Light(50);
     LVGL_Init();                            // returns the screen object

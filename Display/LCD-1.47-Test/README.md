@@ -20,7 +20,7 @@
 
 ### 核心开发板
 - **芯片型号**: ESP32-C6
-- **Flash**: 4MB
+- **Flash**: 8MB
 - **PSRAM**: 无（或 2MB）
 
 ### 显示模块
@@ -138,13 +138,12 @@ idf.py -p /dev/ttyUSB0 flash monitor
 ```
 LCD-1.47-Test/
 ├── main/                    # 应用程序主目录
-│   ├── main.c              # 程序入口
-│   ├── main_new.c          # 新版主程序（推荐使用）
+│   ├── main.c              # 程序入口 (app_main)
 │   │
 │   ├── LCD_Driver/         # LCD 驱动层
 │   │   ├── Vernon_ST7789T/ # Vernon 定制驱动
-│   │   │   ├── ST7789.c    # 驱动实现
-│   │   │   └── ST7789.h    # 驱动头文件
+│   │   │   ├── Vernon_ST7789T.c    # ST7789T 面板驱动实现
+│   │   │   └── Vernon_ST7789T.h    # 面板接口头文件
 │   │   └── ...
 │   │
 │   ├── LVGL_Driver/        # LVGL 适配层
@@ -304,7 +303,7 @@ void led_demo(void)
 | SPI 时钟频率 | 40 MHz | LCD 通信速度 |
 | LVGL 刷新率 | ~30 FPS | 典型 UI 场景 |
 | 内存占用 | ~150 KB | LVGL + 缓冲区 |
-| Flash 使用 | ~1.2 MB | 固件大小 |
+| Flash 使用 | ~1.6 MB | 固件大小 |
 | RGB LED 数量 | 最多 256 | 受 RMT 内存限制 |
 
 ---

@@ -6,17 +6,19 @@ esp_lcd_panel_handle_t panel_handle = NULL;
 
 void LCD_Init(void)
 {
-    // ESP_LOGI(TAG_LCD, "Initialize SPI bus");                                            
-    // spi_bus_config_t buscfg = {                                                         
-    //     .sclk_io_num = EXAMPLE_PIN_NUM_SCLK,                                            
-    //     .mosi_io_num = EXAMPLE_PIN_NUM_MOSI,                                            
-    //     .miso_io_num = EXAMPLE_PIN_NUM_MISO,                                            
-    //     .quadwp_io_num = -1,                                                            
-    //     .quadhd_io_num = -1,                                                            
-    //     .max_transfer_sz = EXAMPLE_LCD_H_RES * EXAMPLE_LCD_V_RES * sizeof(uint16_t),    
-    // };
-    // ESP_ERROR_CHECK(spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO));            
-
+    ESP_LOGI(TAG_LCD, "Initialize SPI bus");
+    spi_bus_config_t buscfg = {
+        .sclk_io_num = EXAMPLE_PIN_NUM_SCLK,
+        .mosi_io_num = EXAMPLE_PIN_NUM_MOSI,
+        .miso_io_num = -1,
+        .quadwp_io_num = -1,
+        .quadhd_io_num = -1,
+        .max_transfer_sz = 8192, /* covers the LVGL flush chunk: 172*20 px * 2 B = 6880 B */
+    };
+    esp_err_t bus_ret = spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
+    if (bus_ret != ESP_OK && bus_ret != ESP_ERR_INVALID_STATE) {
+        ESP_LOGE(TAG_LCD, "SPI bus init failed (%s)", esp_err_to_name(bus_ret));
+    }
     ESP_LOGI(TAG_LCD, "Install panel IO");                                              
     esp_lcd_panel_io_handle_t io_handle = NULL;                                         
     esp_lcd_panel_io_spi_config_t io_config = {                                             
